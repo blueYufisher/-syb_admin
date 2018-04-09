@@ -116,7 +116,7 @@ export default {
         // if (!isLt2M) {
         //     env.$message.error('上传封面图片大小不能超过 500KB!');
         // } else {
-        env.fileUrl = URL.createObjectURL(file.name);
+        env.fileUrl = file.name;
         return fd;
         // }
     },
