@@ -186,7 +186,7 @@
                 this.fd = util.uploadFile(file, this);
                 api.Files.uploadFile(this.fd, res => {
                     // console.log(res);
-                    _this.fileId = res.body.data.id
+                    _this.fileId = res.body.data.fileId
                 }).then(res => {
                     _this.getInfoFileId().then(res => {
                         _this.infoFileId = res.body.data;

@@ -105,7 +105,7 @@ export default {
         uploadFile: function (file, callback) {
             return new Promise((resolve, reject) => {
                 Vue.http.post(serverUrl + '/uploadFile', file).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.body.status) {
                         callback(res);
                         resolve(res);
@@ -130,7 +130,7 @@ export default {
         upload: function (file, callback) {
             return new Promise((resolve, reject) => {
                 Vue.http.post(serverUrl + '/upload', file).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.body.status) {
                         callback(res);
                         resolve(res);
@@ -163,7 +163,7 @@ export default {
         uploadAvatar: function (file, callback) {
             return new Promise((resolve, reject) => {
                 Vue.http.post(serverUrl + '/uploadAvatar', file).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.body.status) {
                         callback(res);
                         resolve(res);
@@ -207,7 +207,7 @@ export default {
         uploadFile: function (file, callback) {
             return new Promise((resolve, reject) => {
                 Vue.http.post(serverUrl + '/uploadFile', file).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.body.status) {
                         callback(res);
                         resolve(res);

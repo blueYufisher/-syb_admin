@@ -81,7 +81,7 @@
                     fd.append('upfile', files[0]);
                     fd.append('title', files[0].name);
                     api.Pictures.upload(fd, res => {
-                        var imgUrl = _this.serverUrl + '/images/' + res.body.data.url;
+                        var imgUrl = 'http://job.gdut.edu.cn/syb/images/' + res.body.data.url;
                         insert(imgUrl);
                     })
                     // insert(imgUrl)

@@ -165,7 +165,7 @@
                 let _this = this;
                 this.fd = util.uploadPicture(file, this);
                 api.Pictures.upload(this.fd, res => {
-                    _this.editFormInfo.coverPic = res.body.data.id;
+                    _this.editFormInfo.coverPic = res.body.data.picId;
                     _this.picId = _this.editFormInfo.coverPic;
                 }).then(res => {
                     _this.getInfoPicId().then(res => {
@@ -178,7 +178,7 @@
                 this.fd = util.uploadFile(file, this);
                 api.Files.uploadFile(this.fd, res => {
                     // console.log(res);
-                    _this.fileId = res.body.data.id
+                    _this.fileId = res.body.data.fileId
                 }).then(res => {
                     _this.getInfoFileId().then(res => {
                         _this.infoFileId = res.body.data;
