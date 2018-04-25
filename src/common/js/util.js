@@ -90,6 +90,7 @@ export default {
         let fd = new FormData();
         fd.append('upfile', file.raw);
         fd.append('title', file.name);
+        fd.append('picLocation', '封面图片');
         const isJPG = file.type === 'image/jpeg' || 'image/gif' || 'image/png' || 'image/bmp';
         const isLt2M = file.size / 1024 < 500;
 

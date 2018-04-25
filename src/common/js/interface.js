@@ -172,6 +172,19 @@ export default {
                     }
                 });
             });
+        },
+        modifyPicturesByInfo: function (params, callback) {
+            return new Promise((resolve, reject) => {
+                Vue.http.post(serverUrl + '/modifyPicturesByInfo', params).then((res) => {
+                    // console.log(res);
+                    if (res.body.status) {
+                        callback(res);
+                        resolve(res);
+                    } else {
+                        reject();
+                    }
+                });
+            });
         }
     },
     InfoPicture: {

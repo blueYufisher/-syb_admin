@@ -119,7 +119,8 @@
         },
         methods: {
             ...mapActions([
-                'editInfo'
+                'editInfo',
+                'editCurrentType'
             ]),
             //分类显示转换
             formatType: function (row, column) {
@@ -343,7 +344,8 @@
                         _this.typeValue = parseInt(_this.typeValue);
                     }
                 });
-                console.log(_this.typeValue);
+                this.editCurrentType(this.typeValue);
+                // console.log(_this.typeValue);
                 this.getInfos();
             }
         },
@@ -359,7 +361,8 @@
                     _this.typeValue = parseInt(_this.typeValue);
                 }
             });
-            console.log(_this.typeValue);
+            // console.log(_this.typeValue);
+            this.editCurrentType(this.typeValue);
             this.getInfos();
         }
     }

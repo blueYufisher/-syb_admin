@@ -178,7 +178,8 @@
                     {value: 0, label: '入驻'},
                     {value: 1, label: '孵化'}],
                 typeUrl: '',
-                listLoading: false
+                listLoading: false,
+                addPicId:[]
             }
         },
         computed: {
@@ -208,6 +209,7 @@
                 api.Pictures.upload(this.fd, res => {
                     _this.editFormProj.logo = res.body.data.id;
                     _this.picId = _this.editFormProj.logo;
+                    _this.addPicId.push(_this.picId);
                 }).then(res => {
                     _this.getProjectPicId().then(res => {
                         _this.projPicId = res.body.data;
@@ -215,7 +217,7 @@
                 });
             },
             handleSuccess(res, file, fileList) {
-                console.log("Success:", res);
+                // console.log("Success:", res);
             },
             onSubmit() {
                 console.log('submit!');
@@ -264,7 +266,7 @@
                     params = "";
                 // this.editFormProj.coverPic = res.body.data.id;
                 params = JSON.stringify(this.editFormProj);
-                console.log("this.editFormProj:", params);
+                // console.log("this.editFormProj:", params);
                 return new Promise((resolve, reject) => {
                     api.Project.modifyProject(params, function (res) {
                         if (res.body.status) {
@@ -290,11 +292,11 @@
                             _this.editFormProj.enterTime = util.convertDateToJsonDate(this.editFormProj.enterTime);
                             _this.editFormProj.registerTime = util.convertDateToJsonDate(this.editFormProj.registerTime);
                             _this.editFormProj.updateTime = util.convertDateToJsonDate(new Date());
-                            console.log("editFormProj", JSON.stringify(_this.editFormProj));
+                            // console.log("editFormProj", JSON.stringify(_this.editFormProj));
                             _this.modifyProjectData().then((res) => {
                                 _this.modifyProjectPic(_this.projId).then(res => {
                                     _this.listLoading = false;
-                                    console.log("success!!!!", res);
+                                    // console.log("success!!!!", res);
                                     this.$message({
                                         message: '提交成功',
                                         type: 'success'
@@ -302,6 +304,23 @@
                                 });
                                 _this.$router.push({path: '/project'});
                             });
+                            var addPicsId = sessionStorage.getItem('PicsId');
+                            var picsId;
+                            addPicsId = JSON.parse(addPicsId);
+                            console.log(addPicsId);
+                            if (addPicsId !== null){
+                                picsId = _this.addPicId.concat( addPicsId );
+                            } else {
+                                picsId = _this.addPicId;
+                            }
+                            params = {
+                                title: _this.editFormProj.projName,
+                                typeId: 4,
+                                id: picsId
+                            }
+                            api.Pictures.modifyPicturesByInfo(JSON.stringify(params), res => {
+                                // console.log('success!!');
+                            })
                         });
                     } else {
                         util.validateError(_this.editFormRules, _this.editFormProj, errs => {
@@ -316,24 +335,24 @@
                 // console.log("editFormProj:", params);
             },
             logTimeChange(val) {
-                console.log(val)
+                // console.log(val)
             }
         },
         mounted() {
             let _this = this;
             this.projId = this.getEditProj;
-            console.log("projId", this.projId);
+            // console.log("projId", this.projId);
             this.listLoading = true;
             api.Project.selectProjectById(this.projId, function (res) {
                 // console.log(JSON.stringify(res));
                 _this.editFormProj = res.body.data;
                 _this.editFormProj.enterTime = new Date(_this.editFormProj.enterTime);
-                console.log("enterTime:", _this.editFormProj.enterTime);
+                // console.log("enterTime:", _this.editFormProj.enterTime);
                 if (res.body.data.picUrl) {
                     _this.imageUrl = _this.serverUrl + "\\images\\" + res.body.data.picUrl;
                 }
                 _this.listLoading = false;
-                console.log("editFormProj", _this.editFormProj);
+                // console.log("editFormProj", _this.editFormProj);
             });
         }
     }

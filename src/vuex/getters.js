@@ -22,3 +22,11 @@ export const getType = state => {
 export const getLoginUser = state => {
     return state.loginUser;
 }
+
+export const getCurrentType = state => {
+    return state.currentType;
+}
+
+export const getAddPicsId = state => {
+    return state.addPicsId;
+}

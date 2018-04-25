@@ -196,7 +196,8 @@
                     {value: 0, label: '入驻'},
                     {value: 1, label: '孵化'}],
                 typeUrl: '',
-                listLoading: false
+                listLoading: false,
+                addPicId:[]
             }
         },
         computed: {
@@ -232,6 +233,7 @@
                 api.Pictures.upload(this.fd, res => {
                     _this.addFormProj.logo = res.body.data.id;
                     _this.picId = _this.addFormProj.logo;
+                    _this.addPicId.push(_this.picId);
                 }).then(res => {
                     _this.getInfoPicId().then(res => {
                         _this.projPicId = res.body.data;
@@ -332,7 +334,7 @@
                             if (_this.addFormProj.logo === null){
                                 _this.addFormProj.logo = 119;
                             }
-                            console.log("addFormProj", JSON.stringify(_this.addFormProj));
+                            // console.log("addFormProj", JSON.stringify(_this.addFormProj));
                             _this.modifyProjectData().then((res) => {
                                 let proj_id = res.body.data;
                                 _this.modifyProjectPic(proj_id).then(res => {
@@ -344,6 +346,23 @@
                                     });
                                 });
                             });
+                            var addPicsId = sessionStorage.getItem('PicsId');
+                            var picsId;
+                            addPicsId = JSON.parse(addPicsId);
+                            console.log(addPicsId);
+                            if (addPicsId !== null){
+                                picsId = _this.addPicId.concat( addPicsId );
+                            } else {
+                                picsId = _this.addPicId;
+                            }
+                            params = {
+                                title: _this.addFormProj.projName,
+                                typeId: 4,
+                                id: picsId
+                            }
+                            api.Pictures.modifyPicturesByInfo(JSON.stringify(params), res => {
+                                // console.log('success!!');
+                            })
                             _this.$router.push({path: '/project'});
                         });
                     } else {

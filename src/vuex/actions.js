@@ -25,3 +25,12 @@ export const loginUser = ({commit}, user) => {
 export const logoutUser = ({commit}, user) => {
     commit('LOGOUTUSER', user);
 }
+
+export const editCurrentType = ({commit}, type) => {
+    commit('GETCURRENTTYPE', type);
+}
+
+export const editAddPicsId = ({commit}, id) => {
+    commit('GETADDPICSID', id);
+}
+

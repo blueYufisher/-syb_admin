@@ -9,23 +9,25 @@
                 <el-form-item>
                     <el-button type="primary">查询</el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </el-form-item>
+                <!--<el-form-item>-->
+                    <!--<el-button type="primary" @click="handleAdd">新增</el-button>-->
+                <!--</el-form-item>-->
             </el-form>
         </el-col>
 
         <!--列表-->
         <el-table :data="pictures" highlight-current-row v-loading="listLoading"
                   @selection-change="selsChange"
-                  style="width: 100%;">
+                  style="width: 200%;">
             <el-table-column type="selection" width="55">
             </el-table-column>
             <!--<el-table-column prop="id" label="序号" width="60">-->
             <!--</el-table-column>-->
-            <el-table-column prop="typeTitle" label="分类" width="100" sortable>
+            <el-table-column prop="category" label="所属文章分类" width="200" sortable>
             </el-table-column>
-            <el-table-column prop="infoTitle" label="标题" min-width="250" sortable>
+            <el-table-column prop="location" label="类别" width="100" sortable>
+            </el-table-column>
+            <el-table-column prop="title" label="标题" min-width="350" sortable>
             </el-table-column>
             <el-table-column prop="url" label="图片" width="150" sortable>
                 <template scope="scope">
@@ -34,9 +36,9 @@
             </el-table-column>
             <!--<el-table-column prop="url" label="链接" min-width="160" sortable>-->
             <!--</el-table-column>-->
-            <el-table-column prop="updateTime" label="更新时间" min-width="100" :formatter="formatUpdateTime" sortable>
+            <el-table-column prop="updateTime" label="更新时间" min-width="150" :formatter="formatUpdateTime" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="150" fixed="right">
                 <template scope="scope">
                     <!--<el-button size="small" @click="goPath">编辑</el-button>-->
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>

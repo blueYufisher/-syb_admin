@@ -8,6 +8,8 @@
 <script>
     import E from 'wangeditor'
     import api from '../common/js/interface'
+    import {mapGetters} from 'vuex'
+    import {mapActions} from 'vuex'
 
     export default {
         name: 'editor',
@@ -16,6 +18,7 @@
                 editor: null,
                 editorContent: '',
                 serverUrl: process.env.API_ROOT,  //打包部署上线时
+                addPicId:[]
             }
         },
         props: {
@@ -24,6 +27,9 @@
             }
         },
         methods: {
+            ...mapActions([
+                'editAddPicsId'
+            ]),
             getContent: function () {
                 return this.editor.txt.html();
             },
@@ -33,6 +39,12 @@
             setContent: function (val) {
                 this.editor.txt.html(val)
             }
+        },
+        computed: {
+            // 使用对象展开运算符将 getters 混入 computed 对象中
+            ...mapGetters([
+                     // ...
+            ])
         },
         watch: {
             defaultMsg: function (val, oldVal) {
@@ -50,9 +62,12 @@
                     let fd = new FormData();
                     fd.append('upfile', files[0]);
                     fd.append('title', files[0].name);
+                    fd.append('picLocation', '文章图片');
                     api.Pictures.upload(fd, res => {
                         var imgUrl = 'http://job.gdut.edu.cn/syb/images/' + res.body.data.url;
                         insert(imgUrl);
+                        _this.addPicId.push(res.body.data.id);
+                        sessionStorage.setItem('PicsId', '['+_this.addPicId+']');
                     })
                     // insert(imgUrl)
                 };
@@ -80,9 +95,12 @@
                     let fd = new FormData();
                     fd.append('upfile', files[0]);
                     fd.append('title', files[0].name);
+                    fd.append('picLocation', '文章图片');
                     api.Pictures.upload(fd, res => {
                         var imgUrl = 'http://job.gdut.edu.cn/syb/images/' + res.body.data.url;
                         insert(imgUrl);
+                        _this.addPicId.push(res.body.data.id);
+                        sessionStorage.setItem('PicsId', '['+_this.addPicId+']');
                     })
                     // insert(imgUrl)
                 };

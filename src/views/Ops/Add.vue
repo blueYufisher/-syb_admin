@@ -145,17 +145,24 @@
                 fileId: '',
                 infoPicId: '',
                 infoFileId: '',
-                listLoading: false
+                listLoading: false,
+                addPicId:[]
             }
         },
         computed: {
             // 使用对象展开运算符将 getters 混入 computed 对象中
             ...mapGetters([
-                'getType'
+                'getType',
+                'getCurrentType'
                 // ...
             ])
         },
         methods: {
+            computed: {
+                ...mapActions([
+
+                ]),
+            },
             selectChange() {
                 let _this = this;
                 this.types.forEach(function (item, index) {
@@ -172,6 +179,7 @@
                 api.Pictures.upload(this.fd, res => {
                     _this.addFormInfo.coverPic = res.body.data.id;
                     _this.picId = _this.addFormInfo.coverPic;
+                    _this.addPicId.push(_this.picId);
                 }).then(res => {
                     _this.getInfoPicId().then(res => {
                         _this.infoPicId = res.body.data;
@@ -331,6 +339,20 @@
                                     })
                                 });
                             });
+                            var addPicsId = sessionStorage.getItem('PicsId');
+                            addPicsId = JSON.parse(addPicsId);
+                            console.log(addPicsId);
+                            if (addPicsId !== null){
+                                var picsId = _this.addPicId.concat( addPicsId );
+                            }
+                            params = {
+                                title: _this.addFormInfo.title,
+                                typeId: _this.addFormInfo.type,
+                                id: picsId
+                            }
+                            api.Pictures.modifyPicturesByInfo(JSON.stringify(params), res => {
+                                // console.log('success!!');
+                            })
                             _this.$router.push({path: _this.typeUrl});
                         });
                     } else {
@@ -348,7 +370,9 @@
         mounted() {
             let _this = this;
             this.types = this.getType;
+            this.addFormInfo.type = this.getCurrentType;
             this.addFormInfo.updateTime = new Date();
+            sessionStorage.setItem('PicsId', []);
             // this.addFormInfo.releaseTime = new Date();
             this.typeUrl = sessionStorage.getItem('fromPath');
         }

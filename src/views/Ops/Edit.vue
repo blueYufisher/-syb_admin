@@ -133,12 +133,14 @@
                 fileTitle: '',
                 fd: {},
                 types: [],
+                typeValue:0,
                 typeUrl: '',
                 picId: '',
                 fileId: '',
                 infoPicId: '',
                 infoFileId: '',
-                listLoading: false
+                listLoading: false,
+                addPicId:[]
             }
         },
         computed: {
@@ -165,8 +167,9 @@
                 let _this = this;
                 this.fd = util.uploadPicture(file, this);
                 api.Pictures.upload(this.fd, res => {
-                    _this.editFormInfo.coverPic = res.body.data.picId;
+                    _this.editFormInfo.coverPic = res.body.data.id;
                     _this.picId = _this.editFormInfo.coverPic;
+                    _this.addPicId.push(_this.picId);
                 }).then(res => {
                     _this.getInfoPicId().then(res => {
                         _this.infoPicId = res.body.data;
@@ -328,6 +331,21 @@
                                     })
                                 });
                             });
+                            var addPicsId = sessionStorage.getItem('PicsId');
+                            addPicsId = JSON.parse(addPicsId);
+                            // console.log(addPicsId);
+                            if (addPicsId !== null){
+                                var picsId = _this.addPicId.concat( addPicsId );
+                            }
+                            params = {
+                                title: _this.addFormInfo.title,
+                                typeId: _this.addFormInfo.type,
+                                id: picsId
+                            }
+                            api.Pictures.modifyPicturesByInfo(JSON.stringify(params), res => {
+                                // console.log('success!!');
+                            })
+
                             _this.$router.push({path: _this.typeUrl});
                         });
                     } else {
@@ -347,6 +365,8 @@
         mounted() {
             let _this = this;
             this.types = this.getType;
+            // console.log("currentType:",this.typeValue);
+            sessionStorage.setItem('PicsId', []);
             this.listLoading = true;
             this.infoId = this.getEditInfo;
             // console.log("infoId", this.infoId);

@@ -34,7 +34,9 @@ const state = {
         {value: 12, label: '工商财税', url: 'assess'},
         {value: 13, label: '出孵追踪', url: 'hatch'},
         {value: 14, label: '协同创新平台', url: 'base'}],
-    loginUser: {}
+    currentType:-1,
+    loginUser: {},
+    addPicsId:[]
 };
 
 // 定义所需的 mutations
@@ -74,6 +76,12 @@ const mutations = {
     LOGOUTUSER(state, user){
         state.loginUser = user;
         state.user = user;
+    },
+    GETCURRENTTYPE(state, type){
+        state.currentType = type;
+    },
+    GETADDPICSID(state, id){
+        state.addPicsId = id;
     }
 }
 
