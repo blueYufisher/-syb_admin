@@ -28,6 +28,13 @@ module.exports = {
                 pathRewrite: {
                     '^/syb': ''
                 }
+            },
+            '/sybs': {
+                target: 'http://job.gdut.edu.cn/syb',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/sybs': ''
+                }
             }
         },
         // CSS Sourcemaps off by default because relative paths are "buggy"

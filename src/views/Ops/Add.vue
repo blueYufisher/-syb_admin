@@ -45,6 +45,42 @@
                 <!--<div slot="tip" class="el-upload__tip">只能上传一个文件</div>-->
             </el-upload>
         </el-form-item>
+        <el-form-item label="参加导师" prop="tutor" v-if="tutorDisplay">
+            <el-select
+                    v-model="tutorList"
+                    multiple
+                    filterable
+                    remote
+                    reserve-keyword
+                    placeholder="请输入关键词"
+                    :remote-method="remoteMethod"
+                    :loading="loading">
+                <el-option
+                        v-for="item in tutorOptions"
+                        :key="item.key"
+                        :label="item.value"
+                        :value="item.key">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="参加团队" prop="project" v-if="projectDisplay">
+            <el-select
+                    v-model="projectList"
+                    multiple
+                    filterable
+                    remote
+                    reserve-keyword
+                    placeholder="请输入关键词"
+                    :remote-method="remoteMethod1"
+                    :loading="loading">
+                <el-option
+                        v-for="item in projectOptions"
+                        :key="item.key"
+                        :label="item.value"
+                        :value="item.key">
+                </el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item label="内容" prop="content">
             <!--<UE :defaultMsg="addFormInfo.content" :config=config :id=add_ue ref="ue"></UE>-->
             <wang-editor :defaultMsg="addFormInfo.content" ref="wangeditor"></wang-editor>
@@ -146,7 +182,17 @@
                 infoPicId: '',
                 infoFileId: '',
                 listLoading: false,
-                addPicId:[]
+                addPicId:[],
+                placeholder: '请输入文字搜索',
+                input: '',
+                tutorList: [],
+                tutorOptions: [],
+                loading: false,
+                tutorDisplay: false,
+                projectList: [],
+                projectOptions: [],
+                projectDisplay: false,
+                tutorId: -1
             }
         },
         computed: {
@@ -338,21 +384,35 @@
                                         });
                                     })
                                 });
+                                if (_this.tutorList.length > 0) {
+                                    for (var i = 0; i < _this.tutorList.length; i++) {
+                                        _this.insertTutor(_this.tutorList[i]).then((res) => {
+                                            _this.updateMeetingTutorTable(res, info_id);
+                                        })
+                                    }
+                                }
+                                if (_this.projectList.length > 0) {
+                                    for (var i = 0; i < _this.projectList.length; i++) {
+                                        _this.insertProject(_this.projectList[i]).then((res) => {
+                                            _this.updateMeetingProjectTable(res, info_id);
+                                        })
+                                    }
+                                }
                             });
                             var addPicsId = sessionStorage.getItem('PicsId');
-                            addPicsId = JSON.parse(addPicsId);
-                            console.log(addPicsId);
-                            if (addPicsId !== null){
-                                var picsId = _this.addPicId.concat( addPicsId );
+                            // console.log(addPicsId);
+                            if (addPicsId !== "") {
+                                addPicsId = JSON.parse(addPicsId);
+                                var picsId = _this.addPicId.concat(addPicsId);
+                                params = {
+                                    title: _this.addFormInfo.title,
+                                    typeId: _this.addFormInfo.type,
+                                    id: picsId
+                                }
+                                api.Pictures.modifyPicturesByInfo(JSON.stringify(params), res => {
+                                    // console.log('success!!');
+                                })
                             }
-                            params = {
-                                title: _this.addFormInfo.title,
-                                typeId: _this.addFormInfo.type,
-                                id: picsId
-                            }
-                            api.Pictures.modifyPicturesByInfo(JSON.stringify(params), res => {
-                                // console.log('success!!');
-                            })
                             _this.$router.push({path: _this.typeUrl});
                         });
                     } else {
@@ -366,6 +426,198 @@
                     }
                 });
             },
+            insertTutor: function (id) {
+                let _this = this,
+                    obj = {};
+                obj.tutorId = id;
+                // this.editFormInfo.coverPic = res.body.data.id;
+                params = JSON.stringify(obj);
+                return new Promise((resolve, reject) => {
+                    api.Meeting.insertTutorIdReturnID(params, function (res) {
+                        if (res.body.status) {
+                            res.tutorId = id;
+                            resolve(res);
+                        } else {
+                            reject();
+                        }
+                    });
+                });
+            },
+            updateMeetingTutorTable: function (res, id) {
+                let _this = this,
+                    obj = {};
+                obj.tutorId = res.tutorId;
+                obj.meetingId = id;
+                obj.meetingTutorId = res.body.data;
+                // this.editFormInfo.coverPic = res.body.data.id;
+                params = JSON.stringify(obj);
+                return new Promise((resolve, reject) => {
+                    api.Meeting.updateMeetingTutorId(params, function (res) {
+                        if (res.body.status) {
+                            resolve(res);
+                        } else {
+                            reject();
+                        }
+                    });
+                });
+            },
+            insertProject: function (id) {
+                let _this = this,
+                    obj = {};
+                obj.projId = id;
+                // this.editFormInfo.coverPic = res.body.data.id;
+                params = JSON.stringify(obj);
+                return new Promise((resolve, reject) => {
+                    api.Meeting.insertProjectIdReturnID(params, function (res) {
+                        if (res.body.status) {
+                            res.projId = id;
+                            resolve(res);
+                        } else {
+                            reject();
+                        }
+                    });
+                });
+            },
+            updateMeetingProjectTable: function (res, id) {
+                let _this = this,
+                    obj = {};
+                obj.projId = res.projId;
+                obj.meetingId = id;
+                obj.meetingProjId = res.body.data;
+                // this.editFormInfo.coverPic = res.body.data.id;
+                params = JSON.stringify(obj);
+                return new Promise((resolve, reject) => {
+                    api.Meeting.updateMeetingProjectId(params, function (res) {
+                        if (res.body.status) {
+                            resolve(res);
+                        } else {
+                            reject();
+                        }
+                    });
+                });
+            },
+            getTutorData: function (params) {
+                let _this = this;
+                // this.editFormInfo.coverPic = res.body.data.id;
+                return new Promise((resolve, reject) => {
+                    api.Infos.searchInfoByTypeId(params, function (res) {
+                        if (res.body.status) {
+                            resolve(res);
+                        } else {
+                            reject();
+                        }
+                    });
+                });
+            },
+            getProjectData: function (currentPage, pageSize, params) {
+                let _this = this;
+                // this.editFormInfo.coverPic = res.body.data.id;
+                return new Promise((resolve, reject) => {
+                    api.Project.searchProjectByProjNameOrCompanyName(params, currentPage, pageSize, function (res) {
+                        if (res.body.status) {
+                            resolve(res);
+                        } else {
+                            reject();
+                        }
+                    });
+                });
+            },
+            postInfoData(currentPage, pageSize, ints) {
+                let postInfoObj = {
+                    currentPage: currentPage,
+                    pageSize: pageSize,
+                    ints: ints,
+                    title: this.input,
+                    content: this.input
+                }
+                this.searchResults = []
+                return new Promise((resolve, reject) => {
+                    this.getTutorData(JSON.stringify(postInfoObj)).then(res => {
+                        // console.log(res.resultList)
+                        let array = []
+                        let maxSize = res.body.data.resultList.length
+                        // if (res.body.data.resultList.length <= 5) {
+                        //     maxSize = res.body.data.resultList.length
+                        // }
+                        for (let i = 0; i < maxSize; i++) {
+                            let obj = {}
+                            obj.value = res.body.data.resultList[i].title
+                            obj.key = res.body.data.resultList[i].id
+                            array.push(obj)
+                        }
+                        if (array.length !== 0) {
+                            resolve(array)
+                        } else {
+                            reject()
+                        }
+                    })
+                })
+            },
+            postProjData(currentPage, pageSize) {
+                let postProjObj = {
+                    projName: this.input,
+                    companyName: this.input,
+                    content: this.input
+                }
+                this.searchResults = []
+                return new Promise((resolve, reject) => {
+                    this.getProjectData(currentPage, pageSize, JSON.stringify(postProjObj)).then(res => {
+                        // console.log(res.resultList)
+                        let array = []
+                        let maxSize = res.body.data.resultList.length
+                        // if (res.body.data.resultList.length <= 5) {
+                        //     maxSize = res.body.data.resultList.length
+                        // }
+                        for (let i = 0; i < maxSize; i++) {
+                            let obj = {}
+                            obj.value = res.body.data.resultList[i].projName
+                            obj.key = res.body.data.resultList[i].id
+                            array.push(obj)
+                        }
+                        if (array.length !== 0) {
+                            resolve(array)
+                        } else {
+                            reject()
+                        }
+                    })
+                })
+            },
+            handleSelect(item) {
+                this.input = item.value
+            },
+            remoteMethod(query) {
+                let _this = this;
+                console.log(this.tutorList)
+                if (query !== '') {
+                    this.loading = true;
+                    this.input = query;
+                    _this.postInfoData(1, 50, [6]).then(array => {
+                        // _this.searchResults = array
+                        _this.tutorOptions = array
+                        this.loading = false;
+                    }).catch(() => {
+                        reject([])
+                    })
+                } else {
+                    // this.options4 = [];
+                }
+            },
+            remoteMethod1(query) {
+                let _this = this;
+                if (query !== '') {
+                    this.loading = true;
+                    this.input = query;
+                    _this.postProjData(1, 50).then(array => {
+                        // _this.searchResults = array
+                        _this.projectOptions = array
+                        this.loading = false;
+                    }).catch(() => {
+                        reject([])
+                    })
+                } else {
+                    // this.options4 = [];
+                }
+            },
         },
         mounted() {
             let _this = this;
@@ -375,6 +627,10 @@
             sessionStorage.setItem('PicsId', []);
             // this.addFormInfo.releaseTime = new Date();
             this.typeUrl = sessionStorage.getItem('fromPath');
+            if (this.addFormInfo.type === 7) {
+                _this.tutorDisplay = true;
+                _this.projectDisplay = true;
+            }
         }
     }
 

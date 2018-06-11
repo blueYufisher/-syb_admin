@@ -330,6 +330,8 @@
                             _this.addFormProj.enterTime = util.convertDateToJsonDate(this.addFormProj.enterTime);
                             _this.addFormProj.registerTime = util.convertDateToJsonDate(this.addFormProj.registerTime);
                             _this.addFormProj.updateTime = util.convertDateToJsonDate(new Date());
+                            _this.addFormProj.thumbs = 0;
+                            _this.addFormProj.comments = 0;
                             _this.addFormProj.visit = 0;
                             if (_this.addFormProj.logo === null){
                                 _this.addFormProj.logo = 119;

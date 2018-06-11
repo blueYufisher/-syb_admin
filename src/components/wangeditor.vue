@@ -34,7 +34,13 @@
                 return this.editor.txt.html();
             },
             getTXTContent: function () {
-                return this.editor.txt.text ();
+                // return this.editor.txt.text ();
+                var str = this.editor.txt.html();
+                str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+                str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+                //str = str.replace(/\n[\s| | ]*\r/g,‘\n‘); //去除多余空行
+                str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+                return str;
             },
             setContent: function (val) {
                 this.editor.txt.html(val)
@@ -64,6 +70,7 @@
                     fd.append('title', files[0].name);
                     fd.append('picLocation', '文章图片');
                     api.Pictures.upload(fd, res => {
+                        // var imgUrl = serverUrl + "\\images\\" + res.body.data.url;
                         var imgUrl = 'http://job.gdut.edu.cn/syb/images/' + res.body.data.url;
                         insert(imgUrl);
                         _this.addPicId.push(res.body.data.id);
@@ -98,6 +105,7 @@
                     fd.append('picLocation', '文章图片');
                     api.Pictures.upload(fd, res => {
                         var imgUrl = 'http://job.gdut.edu.cn/syb/images/' + res.body.data.url;
+                        // var imgUrl = serverUrl + "\\images\\" + res.body.data.url;
                         insert(imgUrl);
                         _this.addPicId.push(res.body.data.id);
                         sessionStorage.setItem('PicsId', '['+_this.addPicId+']');

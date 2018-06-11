@@ -65,6 +65,11 @@ export default {
             Vue.http.post(serverUrl + '/modifyInfo', params).then(function (res) {
                 callback(res);
             });
+        },
+        searchInfoByTypeId: function (params, callback) {
+            Vue.http.post(serverUrl + '/searchInfoByTypeId', params).then(function (res) {
+                callback(res);
+            });
         }
     },
     Project: {
@@ -338,5 +343,33 @@ export default {
                 callback(res);
             })
         }
+    },
+    Meeting:{
+        insertTutorIdReturnID: function (params, callback) {
+            Vue.http.post(serverUrl + '/insertTutorIdReturnID', params).then(res => {
+                callback(res);
+            })
+        },
+        updateMeetingTutorId: function (params, callback) {
+            Vue.http.post(serverUrl + '/updateMeetingTutorId', params).then(res => {
+                callback(res);
+            })
+        },
+        selectTutorIdByMeetingId:function(id, callback){
+            return Interface.gainJSON('/selectTutorIdByMeetingId?meetingId=' + id, callback);
+        },
+        insertProjectIdReturnID: function (params, callback) {
+            Vue.http.post(serverUrl + '/insertProjectIdReturnID', params).then(res => {
+                callback(res);
+            })
+        },
+        updateMeetingProjectId: function (params, callback) {
+            Vue.http.post(serverUrl + '/updateMeetingProjectId', params).then(res => {
+                callback(res);
+            })
+        },
+        selectProjectIdByMeetingId:function(id, callback){
+            return Interface.gainJSON('/selectProjectIdByMeetingId?meetingId=' + id, callback);
+        },
     }
 };
